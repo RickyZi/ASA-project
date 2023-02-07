@@ -77,7 +77,7 @@ house_agent.postSubGoal( new SenseLightsGoal( [
     myHouse.devices.living_room_light, 
     myHouse.devices.bedroom_light, 
     myHouse.devices.bathroom_light,
-    myHouse.devices.hall_light
+    myHouse.devices.hallway_light
 ]))
 
 house_agent.intentions.push(SenseHeatersIntention)
@@ -218,7 +218,7 @@ function init_vacuum_belief(){
     world.beliefs.declare('room entrance')
     world.beliefs.declare('room living-room')
     world.beliefs.declare('room kitchen')
-    world.beliefs.declare('room hall')
+    world.beliefs.declare('room hallway')
     world.beliefs.declare('room bedroom')
     world.beliefs.declare('room bathroom')
 
@@ -228,14 +228,14 @@ function init_vacuum_belief(){
     world.beliefs.declare('connected living-room kitchen')
     world.beliefs.declare('connected kitchen living-room')
 
-    world.beliefs.declare('connected living-room hall')
-    world.beliefs.declare('connected hall living-room')
+    world.beliefs.declare('connected living-room hallway')
+    world.beliefs.declare('connected hallway living-room')
 
-    world.beliefs.declare('connected hall bedroom')
-    world.beliefs.declare('connected bedroom hall')
+    world.beliefs.declare('connected hallway bedroom')
+    world.beliefs.declare('connected bedroom hallway')
 
-    world.beliefs.declare('connected hall bathroom')
-    world.beliefs.declare('connected bathroom hall')
+    world.beliefs.declare('connected hallway bathroom')
+    world.beliefs.declare('connected bathroom hallway')
 
     world.beliefs.declare('at vacuum entrance')
     world.beliefs.declare('off vacuum') 
@@ -244,19 +244,19 @@ function init_vacuum_belief(){
 init_vacuum_belief()
 
 function declare_dirty_rooms(){
-    house_agent.beliefs.declare('dirty entrance')
-    house_agent.beliefs.declare('dirty living-room')
-    house_agent.beliefs.declare('dirty kitchen')
-    house_agent.beliefs.declare('dirty hall')
-    house_agent.beliefs.declare('dirty bathroom')
-    house_agent.beliefs.declare('dirty bedroom')
+    // house_agent.beliefs.declare('dirty entrance')
+    // house_agent.beliefs.declare('dirty living-room')
+    // house_agent.beliefs.declare('dirty kitchen')
+    // house_agent.beliefs.declare('dirty hallway')
+    // house_agent.beliefs.declare('dirty bathroom')
+    // house_agent.beliefs.declare('dirty bedroom')
     
     // world agent version
 
     world.beliefs.declare('dirty entrance')
     world.beliefs.declare('dirty living-room')
     world.beliefs.declare('dirty kitchen')
-    world.beliefs.declare('dirty hall')
+    world.beliefs.declare('dirty hallway')
     world.beliefs.declare('dirty bedroom')
     world.beliefs.declare('dirty bathroom')
 }
@@ -271,7 +271,7 @@ Clock.global.observe('mm', (mm) => {
     // Bob wakes up at 6
 
     if(time.hh==6 && time.mm==5){
-        myHouse.people.bob.moveTo('hall')
+        myHouse.people.bob.moveTo('hallway')
         // myHouse.devices.bedroom_window.openWindow()
     }
     if(time.hh==6 && time.mm==10){
@@ -279,7 +279,7 @@ Clock.global.observe('mm', (mm) => {
         myHouse.people.bob.moveTo('bathroom')
     }
     if(time.hh==6 && time.mm==15){
-        myHouse.people.bob.moveTo('hall')
+        myHouse.people.bob.moveTo('hallway')
     }
         
     if(time.hh==6 && time.mm==20){
@@ -362,7 +362,7 @@ Clock.global.observe('mm', (mm) => {
         // vacuum agent starts when there's no one at home, all the rooms are declared as dirty since the resident used them
         vacuum_agent.postSubGoal( new RetryGoal( { goal: new PlanningGoal( { goal: [
                     ['clean entrance'],['clean living-room'], ['clean kitchen'], 
-                    ['clean hall'], ['clean bedroom'], ['clean bathroom'], ['at vacuum entrance'],
+                    ['clean hallway'], ['clean bedroom'], ['clean bathroom'], ['at vacuum entrance'],
                     ['off', 'vacuum']
                 ]} ) } ) )
     }
@@ -382,7 +382,7 @@ Clock.global.observe('mm', (mm) => {
     }
         
     if(time.hh==19 && time.mm==10){
-        myHouse.people.bob.moveTo('hall')
+        myHouse.people.bob.moveTo('hallway')
     }
         
     if(time.hh==19 && time.mm==15){
@@ -391,7 +391,7 @@ Clock.global.observe('mm', (mm) => {
     }
         
     if(time.hh==19 && time.mm==20){
-        myHouse.people.bob.moveTo('hall')
+        myHouse.people.bob.moveTo('hallway')
     }
         
     if(time.hh==19 && time.mm==25){
@@ -412,7 +412,7 @@ Clock.global.observe('mm', (mm) => {
         
 
     if(time.hh==22 && time.mm==0){
-        myHouse.people.bob.moveTo('hall')
+        myHouse.people.bob.moveTo('hallway')
     }
         
     if(time.hh==22 && time.mm==5){
@@ -422,7 +422,7 @@ Clock.global.observe('mm', (mm) => {
         
 
     if(time.hh==22 && time.mm==25){
-        myHouse.people.bob.moveTo('hall')
+        myHouse.people.bob.moveTo('hallway')
         myHouse.devices.dish_washer.turnOff()
 
     }

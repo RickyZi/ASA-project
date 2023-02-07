@@ -19,13 +19,13 @@ class House {
     constructor () {
         this.people = { bob: new Person(this, 'Bob') }
         this.rooms = {
-                // one floor -> entrance, kitchen, living room, bedroom, bathroom, hall (connects living room with bathroom and bedroom)
+                // one floor -> entrance, kitchen, living room, bedroom, bathroom, hallway (connects living room with bathroom and bedroom)
             kitchen: { name: 'kitchen', doors_to: ['living_room'], num_ppl: 0 },
-            living_room: { name: 'living_room', doors_to: ['kitchen', 'hall', 'entrance'], num_ppl : 0 },
+            living_room: { name: 'living_room', doors_to: ['kitchen', 'hallway', 'entrance'], num_ppl : 0 },
             entrance: {name: 'entrance', doors_to: ['living_room', 'outdoor'], num_ppl: 0},
-            bathroom: {name: 'bathroom', doors_to: ['hall'], num_ppl: 0},
-            bedroom: {name: 'bedroom', doors_to: ['hall'], num_ppl : 1},
-            hall: {name: 'hall', doors_to: ['bathroom', 'bedroom', 'living_room'], num_ppl: 0}, 
+            bathroom: {name: 'bathroom', doors_to: ['hallway'], num_ppl: 0},
+            bedroom: {name: 'bedroom', doors_to: ['hallway'], num_ppl : 1},
+            hallway: {name: 'hallway', doors_to: ['bathroom', 'bedroom', 'living_room'], num_ppl: 0}, 
             outdoor: {name: 'outdoor', doors_to: ['entrance'], num_ppl: 0} // used to simulate resident going out of the house (i.e. to work)
 
         }
@@ -37,7 +37,7 @@ class House {
                 - kitchen: light, heater
                 - bathroom: light, heater
                 - bedroom: light, heater,
-                - hall: light
+                - hallway: light
             */
 
             // lights 
@@ -47,7 +47,7 @@ class House {
             entrance_light: new Light(this, 'entrance_light'),
             bathroom_light: new Light(this, 'bathroom_light'),
             bedroom_light: new Light(this, 'bedroom_light'),
-            hall_light: new Light(this, 'hall_light'),
+            hallway_light: new Light(this, 'hallway_light'),
 
             // heaters -> controlled by houseAgent, turn on/off as desired by the user
             kitchen_heater: new Heater(this, 'kitchen_heater'),
