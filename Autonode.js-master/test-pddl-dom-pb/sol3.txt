@@ -1,0 +1,20 @@
+;; test empty room instead of dirty
+
+
+(turnon vacuum)
+(cleanroom vacuum entrance)
+(move vacuum entrance living-room)
+(cleanroom vacuum living-room)
+(move vacuum living-room kitchen)
+(cleanroom vacuum kitchen)
+(move vacuum kitchen living-room)
+(move vacuum living-room hall)
+(cleanroom vacuum hall)
+(move vacuum hall bathroom)
+(cleanroom vacuum bathroom)
+(move vacuum bathroom hall)
+(move vacuum hall bedroom)
+(cleanroom vacuum bedroom)
+(move vacuum bedroom hall)
+(move vacuum hall living-room)
+(tunroff vacuum)
