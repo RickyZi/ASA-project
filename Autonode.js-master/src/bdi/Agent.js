@@ -10,12 +10,12 @@ const colors = ['red', 'blue', 'green', 'yellow', 'magenta', 'cyan', 'redBright'
  */
 class Agent {
 
-    constructor (name) {
+    constructor (name, device) {
         this.name = name
         this.id = nextId++
 
-        // added to let agent turn on/off vacuum
-        // this.device = device;
+        // added to let agent access to the vacuum device methods
+        this.device = device;
         
         /** @type {Beliefset} beliefs */
         this.beliefs = new Beliefset()

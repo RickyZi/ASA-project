@@ -8,9 +8,10 @@ const PlanningGoal = require('../pddl/PlanningGoal')
 /**
  * World agent
  * world methos -> method that our device have
- * vacuum agent acts in the world, in this case the house domain
+ * vacuum agent acts in the world, in this case the house domain which is represented by the knowledge base of the world agent
  */
-class FakeAction{
+
+class MyAction{
 
     constructor (agent, parameters) {
         this.agent = agent
@@ -44,13 +45,13 @@ class FakeAction{
     }
 }
 
-class Move extends FakeAction {
+class Move extends MyAction {
     static parameters = ['vacuum', 'source', 'destination'];
-    static precondition = [['robot','vacuum'],['room', 'source'],['room', 'destination'],['at','vacuum','source'],['connected','source','destination'], ['on', 'vacuum']]
+    static precondition = [ ['robot','vacuum'], ['room', 'source'],['room', 'destination'],['at','vacuum','source'],['connected','source','destination'], ['on', 'vacuum']]
     static effect = [['at','vacuum','destination'],['not at','vacuum','source']]
 }
 
-class CleanRoom extends FakeAction{
+class CleanRoom extends MyAction{
     static parameters = ['vacuum', 'room'];
     static precondition = [['robot','vacuum'],['room', 'room'],['dirty', 'room'],['at','vacuum','room'], ['on', 'vacuum']]
     static effect = [['clean','room'],['not dirty','room']]
@@ -58,13 +59,13 @@ class CleanRoom extends FakeAction{
 
 // test charging and discharging vacuum_agent batteries
 
-class TurnOn extends FakeAction{
+class TurnOn extends MyAction{
     static parameters = ['vacuum'];
     static precondition = [ ['robot','vacuum'], ['off', 'vacuum'] , ['charging', 'vacuum']];
     static effect = [['on','vacuum'], ['not off', 'vacuum'], ['discharging', 'vacuum'], ['not charging', 'vacuum']];
 }
 
-class TurnOff extends FakeAction{
+class TurnOff extends MyAction{
     static parameters = ['vacuum'];
     static precondition = [ ['robot','vacuum'], ['on', 'vacuum'], ['discharging', 'vacuum']];
     static effect = [['off','vacuum'], ['not on', 'vacuum'], ['charging', 'vacuum'], ['not discharging', 'vacuum']];
@@ -78,13 +79,13 @@ const world = new Agent('world');
 
 world.Move = function ({vacuum, source, destination} = args){
     this.log('move ', vacuum,source,destination)
-    return new Move(world, {vacuum,source,destination}).checkPreconditionAndApplyEffect(25)
+    return new Move(world, {vacuum,source,destination}).checkPreconditionAndApplyEffect(45)
     .catch(err => {this.error('world.Move failed:', err.message || err); throw err;})
 }
 
 world.CleanRoom = function ({vacuum, room} = args) {
     this.log('clean room ', vacuum, room)
-    return new CleanRoom(world, {vacuum, room} ).checkPreconditionAndApplyEffect(50)
+    return new CleanRoom(world, {vacuum, room} ).checkPreconditionAndApplyEffect(90)
     .catch(err=>{this.error('world.CleanRoom failed:', err.message || err); throw err;})
 }
 

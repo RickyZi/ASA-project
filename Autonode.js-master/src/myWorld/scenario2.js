@@ -1,11 +1,3 @@
-/**
- * TODO:
- * - week end scenario
- * -> resident wakes up at 10, goes out from 15 to 18, comes back has dinner and goes to sleep
- * -> show execution of fridge, washing machine and dishwasher
- * -> no vacuum agent
- */
-
 const Beliefset =  require('../bdi/Beliefset')
 const Observable =  require('../utils/Observable')
 const Clock =  require('../utils/Clock')
@@ -15,43 +7,36 @@ const Intention = require('../bdi/Intention')
 
 const House = require('./House')
 
+const pddlActionIntention = require('../pddl/actions/pddlActionIntention')
+// const Agent = require('../bdi/Agent')
+// const Goal = require('../bdi/Goal')
+// const Intention = require('../bdi/Intention')
+// const PlanningGoal = require('../pddl/PlanningGoal')
+
 // const Person = require('./Person')
 // const Light = require('./Light')
 
 // -----------------------------------------------------------------------------------------------------------------------
-// SenseDevice intentions
+// Device intentions
 
 const {AlarmGoal, AlarmIntention} = require('./Alarm')
 const {SenseLightsGoal, SenseLightsIntention, SenseOneLightGoal, SenseOneLightIntention} = require('./LightSensor')
-// const Heater = require('./Heater')
 const { SenseHeatersGoal, SenseHeatersIntention, SenseOneHeaterGoal, SenseOneHeaterIntention } = require('./HeaterSensor')
-// added heater (device + sensor) -> turn on/off similar to lights
-
 const {HeatersGoal, HeatersIntention} = require('./HeatersManager')
-
-// const Fridge = require('./Fridge')
 const { SenseFridgeIntention, SenseFridgeGoal } = require('./FridgeSensor')
-
-// const DoorLock = require('./DoorLock')
 const { SenseDoorLockGoal, SenseDoorLockIntention } = require('./DoorLockSensor')
 const {DoorLockGoal, DoorLockIntention} = require('./DoorLockManager')
-
 const { SensePeopleIntention, SensePeopleGoal } = require('./PersonSensor')
-
-// const WashingMachine = require('./WashingMachine')
 const {SenseWMGoal, SenseWMIntention} = require('./WashingMachineSensor')
-
-// const DishWasher = require('./DishWasher')
 const {SenseDWIntention, SenseDWGoal} = require('./DishWasherSensor')
-
-// const Blinds = require('./Blinds')
 const {SenseBlindsGoal, SenseBlindsIntention, SenseOneBlindGoal, SenseOneBlindIntention} = require('./BlindsSensor')
 const {BlindsGoal, BlindsIntention} = require('./BlindsManager')
 
 // ----------------------------------------------------------------------
 // pddl actions
-// const{Move, CleanRoom, TurnOn, TurnOff, RetryGoal, RetryFourTimesIntention} = require('./VacuumScenario')
-// const PlanningGoal = require('../pddl/PlanningGoal')
+const{Move, CleanRoom, TurnOn, TurnOff, RetryGoal, RetryFourTimesIntention} = require('./vacuumCleanerScenario')
+const PlanningGoal = require('../pddl/PlanningGoal')
+const world = require('./VacuumAgentWorld')
 // ----------------------------------------------------------------------
 
 
@@ -64,7 +49,6 @@ var myHouse = new House()
 // ---------------- Agents ----------------
 
 // ----------------------------------------------------------------------
-
 
 // ---------------- House Agent ----------------
 /*
@@ -82,7 +66,7 @@ var security_agent = new Agent('security_agent');
 // --------------- House Agent ---------------
 
 house_agent.intentions.push(AlarmIntention)
-house_agent.postSubGoal( new AlarmGoal({hh:10, mm:0}) ) // wake up at 10
+house_agent.postSubGoal( new AlarmGoal({hh:6, mm:0}) )
 
 house_agent.intentions.push(SensePeopleIntention)
 house_agent.postSubGoal(new SensePeopleGoal([myHouse.people.bob]))
@@ -153,149 +137,141 @@ security_agent.postSubGoal(new BlindsGoal([myHouse.devices.bedroom_blinds, myHou
 
 // ---------------- Vacuum Agent ----------------
 
-// var vacuum_agent = new Agent('vacuum_agent', myHouse.devices.vacuum_cleaner);
+// vacuum agent version where we directly access its methods
+var vacuum_agent = new Agent('vacuum_cleaner', myHouse.devices.vacuum_cleaner);
 
-// // call online planner
-// let {OnlinePlanning} = require('../pddl/OnlinePlanner')([Move, CleanRoom, TurnOn, TurnOff, RetryFourTimesIntention])
+// var vacuum_agent = new Agent('vacuum');
 
-// vacuum_agent.intentions.push(OnlinePlanning)
-// vacuum_agent.intentions.push(RetryFourTimesIntention)
+// call online planner
+let {OnlinePlanning} = require('../pddl/OnlinePlanner')([Move, CleanRoom, TurnOn, TurnOff]) //, TurnOn, TurnOff, RetryFourTimesIntention])
 
-// function init_vacuum_belief(){
-//     // robot declaration
-//     vacuum_agent.beliefs.declare('robot vacuum')
+vacuum_agent.intentions.push(OnlinePlanning)
+vacuum_agent.intentions.push(RetryFourTimesIntention)
 
-//     // room definition
-//     vacuum_agent.beliefs.declare('room entrance')
-//     vacuum_agent.beliefs.declare('room living-room')
-//     vacuum_agent.beliefs.declare('room kitchen')
-//     vacuum_agent.beliefs.declare('room hall')
-//     vacuum_agent.beliefs.declare('room bathroom')
-//     vacuum_agent.beliefs.declare('room bedroom')
+// world.beliefs.observeAny(sensor(vacuum_agent))
+// world.beliefs.observeAny((value,key,observable) => {value?vacuum_agent.beliefs.declare(key):vacuum_agent.beliefs.undeclare(key)})
 
-//     // house structure definition
-//     vacuum_agent.beliefs.declare('connected entrance living-room')
-//     vacuum_agent.beliefs.declare('connected living-room entrance')
+// if we access directly the vacuum_cleaner methods:
 
-//     vacuum_agent.beliefs.declare('connected living-room kitchen')
-//     vacuum_agent.beliefs.declare('connected kitchen living-room')
+var sensor = (agent) => (value,key,observable) => {
+    let predicate = key.split(' ')[0]
+    let arg1 = key.split(' ')[1]
+    // let arg2 = key.split(' ')[2]
+    if (predicate=='dirty')
+        // if (arg2==agent.name)
+            key = 'dirty '+arg1; //+arg1; //key.split(' ').slice(0,2).join(' ')
+    else
+        return;
+
+    value?agent.beliefs.declare(key):agent.beliefs.undeclare(key)
+}
+
+house_agent.beliefs.observeAny(sensor(vacuum_agent))
+
+// world.beliefs.observeAny(sensor(vacuum_agent))
+
+function init_vacuum_belief(){
+
+    // robot declaration
+    vacuum_agent.beliefs.declare('robot vacuum')
+
+    // room definition
+    vacuum_agent.beliefs.declare('room entrance')
+    vacuum_agent.beliefs.declare('room living-room')
+    vacuum_agent.beliefs.declare('room kitchen')
+    vacuum_agent.beliefs.declare('room hall')
+    vacuum_agent.beliefs.declare('room bathroom')
+    vacuum_agent.beliefs.declare('room bedroom')
+
+    // house structure definition
+    vacuum_agent.beliefs.declare('connected entrance living-room')
+    vacuum_agent.beliefs.declare('connected living-room entrance')
+
+    vacuum_agent.beliefs.declare('connected living-room kitchen')
+    vacuum_agent.beliefs.declare('connected kitchen living-room')
     
-//     vacuum_agent.beliefs.declare('connected living-room hall')
-//     vacuum_agent.beliefs.declare('connected hall living-room')
+    vacuum_agent.beliefs.declare('connected living-room hall')
+    vacuum_agent.beliefs.declare('connected hall living-room')
 
-//     vacuum_agent.beliefs.declare('connected hall bathroom')
-//     vacuum_agent.beliefs.declare('connected bathroom hall')
+    vacuum_agent.beliefs.declare('connected hall bathroom')
+    vacuum_agent.beliefs.declare('connected bathroom hall')
 
-//     vacuum_agent.beliefs.declare('connected hall bedroom')
-//     vacuum_agent.beliefs.declare('connected bedroom hall')
+    vacuum_agent.beliefs.declare('connected hall bedroom')
+    vacuum_agent.beliefs.declare('connected bedroom hall')
     
-//     // clean rooms 
-//     vacuum_agent.beliefs.declare('clean entrance')
-//     vacuum_agent.beliefs.declare('clean living-room')
-//     vacuum_agent.beliefs.declare('clean kitchen')
-//     vacuum_agent.beliefs.declare('clean hall')
-//     vacuum_agent.beliefs.declare('clean bathroom')
-//     vacuum_agent.beliefs.declare('clean bedroom')
+    // def init location vacuum
+    vacuum_agent.beliefs.declare('at vacuum entrance')
+
+    //robot initially off
+    vacuum_agent.beliefs.declare('off vacuum')
+
+    // robot is charging at the base station located in the entrance
+    vacuum_agent.beliefs.declare('charging vacuum') 
+
+    // -------------------------------------------------------
+    // world agent version
+
+    /*
+    world.beliefs.declare('robot vacuum')
+
+    world.beliefs.declare('charging vacuum')
+
+    world.beliefs.declare('room entrance')
+    world.beliefs.declare('room living-room')
+    world.beliefs.declare('room kitchen')
+    world.beliefs.declare('room hall')
+    world.beliefs.declare('room bedroom')
+    world.beliefs.declare('room bathroom')
+
+    world.beliefs.declare('connected entrance living-room')
+    world.beliefs.declare('connected living-room entrance')
+
+    world.beliefs.declare('connected living-room kitchen')
+    world.beliefs.declare('connected kitchen living-room')
+
+    world.beliefs.declare('connected living-room hall')
+    world.beliefs.declare('connected hall living-room')
+
+    world.beliefs.declare('connected hall bedroom')
+    world.beliefs.declare('connected bedroom hall')
+
+    world.beliefs.declare('connected hall bathroom')
+    world.beliefs.declare('connected bathroom hall')
+
+    world.beliefs.declare('at vacuum entrance')
+    world.beliefs.declare('off vacuum') 
+    */
+}
+
+init_vacuum_belief()
+
+function declare_dirty_rooms(){
+    house_agent.beliefs.declare('dirty entrance')
+    house_agent.beliefs.declare('dirty living-room')
+    house_agent.beliefs.declare('dirty kitchen')
+    house_agent.beliefs.declare('dirty hall')
+    house_agent.beliefs.declare('dirty bathroom')
+    house_agent.beliefs.declare('dirty bedroom')
     
-//     // def init location vacuum
-//     vacuum_agent.beliefs.declare('at vacuum entrance')
+    // world agent version
 
-//     //robot initially off
-//     vacuum_agent.beliefs.declare('off vacuum')
-
-//     // robot is charging at the base station located in the entrance
-//     vacuum_agent.beliefs.declare('charging vacuum') 
-// }
-
-// init_vacuum_belief()  // call function to init vacuum_agent beliefs
-// // var dirty_rooms_sensor = (agent) => (value,key,observable) => {
-// //     let predicate = key.split(' ')[0]
-// //     let arg1 = key.split(' ')[1]
-// //     //let arg2 = key.split(' ')[2]
-// //     if (predicate=='dirty'){
-// //         key = 'dirty '+arg1;
-// //     }
-// //     else{
-// //         return;
-// //     }    
-// //     value?agent.beliefs.declare(key):agent.beliefs.undeclare(key)
-// // }
-
-// // house_agent.beliefs.observeAny(dirty_rooms_sensor(vacuum_agent));
-// function declare_dirty_rooms(){
-//     vacuum_agent.beliefs.declare('dirty entrance')
-//     vacuum_agent.beliefs.declare('dirty living-room')
-//     vacuum_agent.beliefs.declare('dirty kitchen')
-//     vacuum_agent.beliefs.declare('dirty hall')
-//     vacuum_agent.beliefs.declare('dirty bathroom')
-//     vacuum_agent.beliefs.declare('dirty bedroom')
-// }
-
-// var sensor = (agent) => (value, key, observable) => {
-//     value ? agent.beliefs.declare(key) : agent.beliefs.undeclare(key)
-// }
-
-// sensor(vacuum_agent)
-// vacuum_agent.beliefs.observeAny(sensor(vacuum_agent));
-
-/*
-     runs everyday from 15 to 17 (6 rooms, 20 min each, takes 2h to clean whole house),
-    can either suppose each room is dirty or define some of them randomly as dirty
-*/
+    // world.beliefs.declare('dirty entrance')
+    // world.beliefs.declare('dirty living-room')
+    // world.beliefs.declare('dirty kitchen')
+    // world.beliefs.declare('dirty hall')
+    // world.beliefs.declare('dirty bedroom')
+    // world.beliefs.declare('dirty bathroom')
+}
 
 
 // ----------------------------------------------------------------------
 
-
-// ----------------------------------------------------------------------
-
-// ---------------- Simulated Daily Schedule (fixed) ----------------
-
-// mon - friday -> work [0, 1, 2, 3, 4] (Bob always start/end the day in the bedroom)
-// sat -> party! [5]
-// sun -> rest [6]
-
-/*
-    working day:
-    - wake up -> 6 -> breakfast scenario
-    - leave for work -> 7
-    - lunch -> 13 -> lunch scenario -> turn on heater + light in the kitchen + turn on heater in living room
-    - go back to work at 14
-    - work until 17 and come back home
-    - dinner -> 19 -> dinner scenario
-    - sleep -> 23
-*/
-
-/*  
-    Fridge smulation: 
-        monday -> fridge full 
-        tuesday 
-        wedenesday 
-        thursday -> fridge  half
-        friday 
-        saturday -> washing day, start washing machine in the morning
-        sunday -> fridge empty -> start dishwasher because full, need to wash dishes
-*/
-
-/*
-    weekend:
-    - bob decides when to turn on/off devices 
-    - no more fixed schedule, everything decided by the resident
-*/
-
-// ----------------------------------------------------------------------
-
-//console.log("\n\tbob in " + myHouse.people.bob.in_room + "\t")
 
 Clock.global.observe('mm', (mm) => {
     var time = Clock.global
 
-        
-    //  if(time.hh==6 && time.mm==0){ // Alarm
-    //     // ALARM 
-    //     // start of the day
-    //  } 
-       
+    // Bob wakes up at 6
+
     if(time.hh==6 && time.mm==5){
         myHouse.people.bob.moveTo('hall')
         // myHouse.devices.bedroom_window.openWindow()
@@ -308,7 +284,6 @@ Clock.global.observe('mm', (mm) => {
         myHouse.people.bob.moveTo('hall')
     }
         
-    
     if(time.hh==6 && time.mm==20){
         myHouse.people.bob.moveTo('living_room')
     }
@@ -316,6 +291,7 @@ Clock.global.observe('mm', (mm) => {
     // brekfast scenario
     if(time.hh==6 && time.mm==25){
         myHouse.people.bob.moveTo('kitchen')
+        myHouse.devices.fridge.setHalf()
     }
     
     if(time.hh == 6 && time.mm == 45){
@@ -327,8 +303,11 @@ Clock.global.observe('mm', (mm) => {
         
     if(time.hh==7 && time.mm==0){
         myHouse.people.bob.moveTo('outdoor')
+        //declare_empty_rooms()
     }
-    
+    if(time.hh == 7 && time.mm == 5){
+        myHouse.devices.entrance_door.lockDoor() // Bob lock entance door
+    }
 
     // ----------------------------------------------------------------------
     
@@ -338,9 +317,10 @@ Clock.global.observe('mm', (mm) => {
 
     if(time.hh==13 && time.mm==00){
         myHouse.people.bob.moveTo('entrance')
-        myHouse.devices.entrance_light.switchOnLight()
+        myHouse.devices.entrance_door.unlockDoor()
+        // myHouse.devices.entrance_light.switchOnLight()
         
-         
+            
         // myHouse.devices.kitchen_heater.switchOnHeater()
         //myHouse.devices.fridge.setEmpty()
     }
@@ -350,6 +330,7 @@ Clock.global.observe('mm', (mm) => {
     if(time.hh == 13 && time.mm == 10){
         myHouse.people.bob.moveTo('kitchen')
         // myHouse.devices.kitchen_light.switchOnLight()
+        myHouse.devices.fridge.setEmpty()
     }
     
     if(time.hh == 14 && time.mm == 20){
@@ -358,80 +339,135 @@ Clock.global.observe('mm', (mm) => {
     if(time.hh == 14 && time.mm == 25){
         myHouse.people.bob.moveTo('entrance')
         // myHouse.devices.entrance_light.switchOnLight()
+        
     }
 
     if(time.hh==14 && time.mm==30){
         // myHouse.devices.entrance_light.switchOffLight()
+        myHouse.devices.entrance_door.lockDoor() // Bob locks the door
         myHouse.people.bob.moveTo('outdoor') // bob leaves again for work
+        //declare_dirty_rooms()
+        // vacuum_agent.beliefs.declare('dirty entrance')    
+    }
+
+    if(time.hh == 14 && time.mm == 35){
+        declare_dirty_rooms() // house is empty so vacuum agent can clear all rooms 
     }
     
-    if(time.hh == 14 && time.mm==40){
-        declare_dirty_rooms()
-    }
     // ----------------------------------------------------------------------
-    // test vacuum agent
+    // start vacuum agent
+
+    // takes almsot 3 hours to clean the whole room
+    // runs once per week to reduce electricity consumption
 
     if(time.hh == 15 && time.mm == 0){
-        
-        // call vacuum agent to satisfy goal
-        vacuum_agent.postSubGoal( new RetryGoal( { goal: new PlanningGoal( { goal: ['clean', 'entrance'] } ) } ))
-        // cannot solve problem because something needs to change in the beliefset
+        // vacuum agent starts when there's no one at home, all the rooms are declared as dirty since the resident used them
+        vacuum_agent.postSubGoal( new RetryGoal( { goal: new PlanningGoal( { goal: [
+                    ['clean entrance'],['clean living-room'], ['clean kitchen'], 
+                    ['clean hall'], ['clean bedroom'], ['clean bathroom'], ['at vacuum entrance'],
+                    ['off', 'vacuum']
+                ]} ) } ) )
     }
 
     // ----------------------------------------------------------------------
+
     // Bob finish working and comes back home
     // dinner scenario
 
     if(time.hh==19 && time.mm==0){
+        myHouse.devices.entrance_door.unlockDoor() //bob unlocks door
         myHouse.people.bob.moveTo('entrance')
     }
-       
-    if(time.hh==19 && time.mm==5)
+        
+    if(time.hh==19 && time.mm==5){
         myHouse.people.bob.moveTo('living_room')
-    if(time.hh==19 && time.mm==10)
+    }
+        
+    if(time.hh==19 && time.mm==10){
         myHouse.people.bob.moveTo('hall')
-    if(time.hh==19 && time.mm==15)
+    }
+        
+    if(time.hh==19 && time.mm==15){
         myHouse.people.bob.moveTo('bathroom')
-    if(time.hh==19 && time.mm==20)
+        myHouse.devices.washing_machine.switchOnWashingMachine()
+    }
+        
+    if(time.hh==19 && time.mm==20){
         myHouse.people.bob.moveTo('hall')
-    if(time.hh==19 && time.mm==25)
+    }
+        
+    if(time.hh==19 && time.mm==25){
         myHouse.people.bob.moveTo('living_room')
+    }
+        
 
-    if(time.hh==19 && time.mm==30)
+    if(time.hh==19 && time.mm==30){
         myHouse.people.bob.moveTo('kitchen') // dinner scenario
+        myHouse.devices.fridge.setFull()
+        myHouse.devices.dish_washer.turnOn()
+    }
+       
 
-    if(time.hh==20 && time.mm==15)
+    if(time.hh==20 && time.mm==15){
         myHouse.people.bob.moveTo('living_room')
+    }
+        
 
     if(time.hh==22 && time.mm==0){
         myHouse.people.bob.moveTo('hall')
     }
         
-    if(time.hh==22 && time.mm==5)
+    if(time.hh==22 && time.mm==5){
         myHouse.people.bob.moveTo('bathroom')
-    if(time.hh==22 && time.mm==25)
-        myHouse.people.bob.moveTo('hall')
+        myHouse.devices.washing_machine.switchOffWashingMachine()
+    }
+        
 
+    if(time.hh==22 && time.mm==25){
+        myHouse.people.bob.moveTo('hall')
+        myHouse.devices.dish_washer.turnOff()
+
+    }
+        
     // turn off heaters
     if(time.hh==22 && time.mm==30){
         myHouse.people.bob.moveTo('bedroom')
+        
+    }
+    
+    if(time.hh == 23 && time.mm == 0){
+        myHouse.devices.bedroom_light.switchOffLight()
     }
     
     // ----------------------------------------------------------------------
+
+    // vacuum cleaner called once per week to save electricity consumption
+    // if(time.dd == 3 && time.hh == 15 && time.mm == 0){
+    //     declare_dirty_rooms()
+    //     vacuum_agent.postSubGoal( new RetryGoal( { goal: new PlanningGoal( { goal: 
+    //         [
+    //             ['clean entrance'],['clean living-room'], ['clean kitchen'], 
+    //             ['clean hall'], ['clean bedroom'], ['clean bathroom'], ['at vacuum entrance'],
+    //             ['off', 'vacuum']
+    //         ]
+    //     } ) } ) )
+    // }
+
+    // ----------------------------------------------------------------------
     // fridge & dish washer simulation (fixed)
 
-    if(time.dd == 3 && time.hh == 13 && time.mm==00){
-        myHouse.devices.fridge.setHalf()
-    }
-    if(time.dd == 6 && time.hh == 21 && time.mm == 0){
-        myHouse.devices.fridge.setEmpty()
-    }
-    if(time.dd == 6 && time.hh==22 && time.mm == 0){
-        myHouse.devices.dish_washer.turnOn() // start when fridge empty
-    }
-    if(time.dd == 6 && time.hh==22 && time.mm == 45){
-        myHouse.devices.dish_washer.turnOff() 
-    }
+    // if(time.dd == 3 && time.hh == 13 && time.mm==00){
+    //     myHouse.devices.fridge.setHalf()
+    // }
+    // if(time.dd == 6 && time.hh == 21 && time.mm == 0){
+    //     myHouse.devices.fridge.setEmpty()
+    // }
+    // if(time.dd == 6 && time.hh==21 && time.mm == 5){
+    //     myHouse.devices.dish_washer.turnOn() // start when fridge empty
+    // }
+    // if(time.dd == 6 && time.hh==22 && time.mm == 5){
+    //     myHouse.devices.dish_washer.turnOff() 
+    // }
 
 
     // if(time.dd == 6 && time.hh == 13 && time.mm == 00){
@@ -440,18 +476,20 @@ Clock.global.observe('mm', (mm) => {
 
     // ----------------------------------------------------------------------
     // washing machine simulation
-    if(time.dd == 5 && time.hh == 12 && time.mm == 0){
-        myHouse.devices.washing_machine.switchOnWashingMachine()
-    }
-    if(time.dd == 5 && time.hh == 13 && time.mm == 0){
-        myHouse.devices.washing_machine.switchOffWashingMachine()
-    }
+    // if(time.dd == 5 && time.hh == 18 && time.mm == 0){
+    //     myHouse.devices.washing_machine.switchOnWashingMachine()
+    // }
+    // if(time.dd == 5 && time.hh == 19 && time.mm == 0){
+    //     myHouse.devices.washing_machine.switchOffWashingMachine()
+    // }
 
     // ----------------------------------------------------------------------
     // if(time.dd == 5 || time.dd == 6){ // clock starts from zero
     //     this.log('weekend!')
     // }
          
+
+
 
 })
 

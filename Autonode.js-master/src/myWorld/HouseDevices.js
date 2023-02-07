@@ -92,7 +92,7 @@ class Fridge extends Observable{
         this.house = house;
         this.name = name;
         this.set('status', 'full') //status: empty, full, half
-        this.electricityConsumption = 1000;
+        this.electricityConsumption = 500; // fridge consumes an average of 500W
     }
 
 
@@ -123,7 +123,7 @@ class Heater extends Observable{
         this.house = house;
         this.name = name;
         this.set('status', 'off') // status: on, off
-        this.electricityConsumption = 10; //10kWh each time heater turned on
+        this.electricityConsumption = 15; //10kWh each time heater turned on
     }
 
     switchOnHeater(){
@@ -146,7 +146,7 @@ class Light extends Observable {
         this.house = house;         // reference to the house
         this.name = name;           // non-observable
         this.set('status', 'off')   // status: on, off
-        this.electricityConsumption = 100; // 500Wh
+        this.electricityConsumption = 10; // 500Wh
     }
     switchOnLight () {
         if(this.status == 'on'){
@@ -187,17 +187,17 @@ class VacuumCleaner extends Observable{
 
     //methods
     turnOn(){
-        if(this.status == 'off' && this.battery == 'charging'){
+        // if(this.status == 'off') && this.battery == 'charging'){
             this.status='on';
             console.log('turn on vacuum cleaner');
-        }
+        // }
     }
 
     turnOff(){
-        if(this.status == 'on' && this.battery == 'discharging'){
+        // if(this.status == 'on' )&& this.battery == 'discharging'){
             this.status = 'off';
             console.log('turn off vacuum cleaner');
-        }
+        // }
     }
     
     move(to){

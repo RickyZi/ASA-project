@@ -8,7 +8,7 @@ const Goal = require('../bdi/Goal')
 const Intention = require('../bdi/Intention')
 const PlanningGoal = require('../pddl/PlanningGoal')
 
-// const world = require('./VacuumAgentWorld')
+const world = require('./VacuumAgentWorld')
 
 /**
  * vacuum agent -> called the world methods
@@ -22,65 +22,65 @@ const PlanningGoal = require('../pddl/PlanningGoal')
 */
 
 // could also have done like that -> need also to add the agent's device in the Agent.js constructor -> Agent(name, device) 
-class VacuumAction extends pddlActionIntention{
+// class VacuumAction extends pddlActionIntention{
 
-    async checkPreconditionAndApplyEffect (duration) {
-        if ( this.checkPrecondition() ) {
-            this.applyEffect()
-            await new Promise(res=>setTimeout(res,duration))
-        }
-        else
-            throw new Error('pddl precondition not valid'); //Promise is rejected!
-    }
-}
+//     async checkPreconditionAndApplyEffect (duration) {
+//         if ( this.checkPrecondition() ) {
+//             this.applyEffect()
+//             await new Promise(res=>setTimeout(res,duration))
+//         }
+//         else
+//             throw new Error('pddl precondition not valid'); //Promise is rejected!
+//     }
+// }
 
 
-class Move extends VacuumAction {
+class Move extends pddlActionIntention {
     static parameters = ['vacuum','source', 'destination'];
     static precondition = [['robot','vacuum'], ['room', 'source'],['room', 'destination'],['at','vacuum','source'],['connected','source','destination'], ['on' ,'vacuum'] ];
     static effect = [['at', 'vacuum','destination'],['not at', 'vacuum','source']];
     *exec ({source, destination}=parameters) {
-        // yield world.Move({vacuum: this.agent.name, source: source, destination: destination})
+        yield world.Move({vacuum: this.agent.name, source: source, destination: destination})
 
-        this.agent.device.move(destination)
-        yield this.checkPreconditionAndApplyEffect(40)
+        // this.agent.device.move(destination)
+        // yield this.checkPreconditionAndApplyEffect(40)
     }
 }
 
-class CleanRoom extends VacuumAction {
+class CleanRoom extends pddlActionIntention {
     static parameters = ['vacuum','room'];
     static precondition = [ ['robot','vacuum'], ['room', 'room'],['dirty', 'room'],['at','vacuum', 'room'], ['on' ,'vacuum']];
     static effect = [['clean','room'], ['not dirty', 'room']];
     *exec ({room}=parameters) {
-        // yield world.CleanRoom({vacuum:  this.agent.name, room: room})
+        yield world.CleanRoom({vacuum:  this.agent.name, room: room})
         
-        this.agent.device.cleanRoom(room);
-        yield this.checkPreconditionAndApplyEffect(90);
+        // this.agent.device.cleanRoom(room);
+        // yield this.checkPreconditionAndApplyEffect(90);
     }
 }
 
 
-class TurnOn extends VacuumAction {
+class TurnOn extends pddlActionIntention {
     static parameters = ['vacuum'];
     static precondition = [ ['robot','vacuum'], ['off', 'vacuum'] , ['charging', 'vacuum']];
     static effect = [['on','vacuum'], ['not off', 'vacuum'], ['discharging', 'vacuum'], ['not charging', 'vacuum']];
     *exec ({}=parameters) {
-        // yield world.TurnOn({vacuum: this.agent.name})
+        yield world.TurnOn({vacuum: this.agent.name})
 
-        this.agent.device.turnOn()
-        yield this.checkPreconditionAndApplyEffect(1)
+        // this.agent.device.turnOn()
+        // yield this.checkPreconditionAndApplyEffect(1)
     }
 }
 
-class TurnOff extends VacuumAction {
+class TurnOff extends pddlActionIntention {
     static parameters = ['vacuum'];
     static precondition = [ ['robot','vacuum'], ['on', 'vacuum'], ['discharging', 'vacuum']];
     static effect = [['off','vacuum'], ['not on', 'vacuum'], ['charging', 'vacuum'], ['not discharging', 'vacuum']];
     *exec ({}=parameters) {
-        // yield world.TurnOff({vacuum: this.agent.name})
+        yield world.TurnOff({vacuum: this.agent.name})
 
-        this.agent.device.turnOff()
-        yield this.checkPreconditionAndApplyEffect(1)
+        // this.agent.device.turnOff()
+        // yield this.checkPreconditionAndApplyEffect(1)
     }
 }
 

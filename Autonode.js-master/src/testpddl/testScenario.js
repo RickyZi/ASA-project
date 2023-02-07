@@ -15,6 +15,7 @@ const PlanningGoal = require('../pddl/PlanningGoal')
 const world = require('./world')
 
 const {Move, CleanRoom, TurnOff, TurnOn, RetryFourTimesIntention, RetryGoal} = require('./vacuum')
+const { VacuumCleaner } = require('../myWorld/HouseDevices')
 
 // const {Move, CleanRoom, TurnOn, TurnOff} = require('./vacuumAgent')
 
@@ -182,6 +183,7 @@ const {Move, CleanRoom, TurnOff, TurnOn, RetryFourTimesIntention, RetryGoal} = r
 
 
 {
+    
     let a1 = new Agent('vacuum')
 
     //world.beliefs.observeAny( sensor(a1) )
@@ -206,8 +208,8 @@ const {Move, CleanRoom, TurnOff, TurnOn, RetryFourTimesIntention, RetryGoal} = r
             ['clean entrance'],['clean living-room'], ['clean kitchen'], 
             ['clean hall'], ['clean bedroom'], ['clean bathroom'], 
             ['at vacuum entrance'], ['off vacuum']
-        ] } ) 
-    } ) ) // try to achieve the PlanningGoal for 4 times
+        ] 
+    } ) } ) ) // try to achieve the PlanningGoal for 4 times
 }
     
     

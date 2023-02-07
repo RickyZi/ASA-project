@@ -75,14 +75,13 @@ class House {
             living_room_blinds: new Blinds(this, 'living_room_blinds'),
 
             // vacuum cleaner
-            vacuum_cleaner: new VacuumCleaner(this, 'vacuum', 'entrance')
+            vacuum_cleaner: new VacuumCleaner(this, 'vacuum_cleaner', 'entrance')
             
         }
         this.utilities = {
             electricity: new Observable( { consumption: this.devices.kitchen_light.electricityConsumption } )
+            // selected kitchen light because is one of the most used during the day
             
-
-
             // electricity consumption -> lights, heaters, fridge
             // cleaning time -> robot vacuum cleaner
 
@@ -91,44 +90,8 @@ class House {
 
         }
 
-        // initial status of the house
-        // this.log('\tHouse (init) status \n\t')
-
-        // people
-        this.people.bob.observe('in_room', (v, k)=>console.log('in_room Bob ' + v) )
-
-        // electricity consumption
+        // keep track of electricity consumption
         this.utilities.electricity.observe('consumption', (v,k) => console.log('electricity consumption', v))
-
-        // devices
-        //lights
-        this.devices.bathroom_light.observe('status', (v,k) => console.log('bathroom ligh', v))
-        this.devices.bedroom_light.observe('status', (v,k) => console.log('bedroom ligh', v))
-        this.devices.hall_light.observe('status', (v,k) => console.log('hall ligh', v))
-        this.devices.living_room_light.observe('status', (v,k) => console.log('living_room ligh', v))
-        this.devices.kitchen_light.observe('status', (v,k) => console.log('kitchen ligh', v))
-        this.devices.entrance_light.observe('status', (v,k) => console.log('entrance ligh', v))
-
-        //heaters
-        this.devices.bathroom_heater.observe('status', (v,k) => console.log('bathroom heater', v))
-        this.devices.bedroom_heater.observe('status', (v,k) => console.log('bedroom heater', v))
-        this.devices.kitchen_heater.observe('status', (v,k) => console.log('kitchen heater', v))
-        this.devices.living_room_heater.observe('status', (v,k) => console.log('living_room heater', v))
-        
-        //fridge
-        this.devices.fridge.observe('status', (v,k) => console.log('fridge', v))
-
-        //washing machine
-        this.devices.washing_machine.observe('status', (v,k) => console.log('washing machine', v))
-
-        //dishwasher
-        this.devices.dish_washer.observe('status', (v,k) => console.log('dishwasher', v))
-
-        //door lock
-        this.devices.entrance_door.observe('status', (v,k) => console.log('entrance_door',v))
-
-        //vacuum cleaner
-        this.devices.vacuum_cleaner.observe('status', (v,k)=> console.log('vacuum_cleaner', v))
     }
 }
 
