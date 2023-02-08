@@ -3,7 +3,14 @@ University of Trento - Trento, 2022
 
 Student: Ziglio Riccardo
 
-TODO: 
+# TODO: 
 - check code & update repository  
 - write report!!!
-- write also readme file
+- update readme file
+
+## Project Description
+This repository contains the final implementation of the project of the ASA course.
+
+
+## Repo Structure
+def structure of the repo
