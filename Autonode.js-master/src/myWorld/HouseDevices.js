@@ -1,40 +1,32 @@
-// put all devices here? to clean up a bit code
+// house devices definition
 
 const Observable = require('../utils/Observable');
 
 class Blinds extends Observable {
     constructor (house, name) {
         super()
-        this.house = house;         // reference to the house
-        this.name = name;           // non-observable
-        this.set('status', 'closed')   // status open, not_open
+        this.house = house;         
+        this.name = name;           
+        this.set('status', 'closed')   // status open, closed
     }
     openBlinds () {
         this.status = 'open'
-        //this.house.utilities.electricity.consumption += 1;
-        // Include some messages logged on the console!
-        //console.log('Kitchen light turned on')
         console.log(this.name + ' open')
     }
     closeBlinds () {
         this.status = 'closed'
-        //this.house.utilities.electricity.consumption -= 1;
-        // Include some messages logged on the console!
         console.log(this.name + ' closed')
-        //console.log('Kitchen light turned off')
     }
 }
 
 class DishWasher extends Observable {
     constructor (house, name) {
         super(house, name);
-        this.house = house;         // reference to the house
-        this.name = name;           // non-observable
-        this.set('status', 'off')   // observable
+        this.house = house;         
+        this.name = name;           
+        this.set('status', 'off')   // status: on, off
 
         this.electricityConsumption = 1200; // dishwasher consumes 1200Wh per cleaning cycle
-
-        /* dishwasher status: on, off */
     }
 
     turnOn(){
@@ -45,7 +37,7 @@ class DishWasher extends Observable {
     }
 
     turnOff(){
-        if(this.status == 'on'){// || this.status == 'pause'){
+        if(this.status == 'on'){
             this.status = 'off';
             this.house.utilities.electricity.consumption -= this.electricityConsumption;
         }
@@ -55,11 +47,9 @@ class DishWasher extends Observable {
 class DoorLock extends Observable {
     constructor (house, name) {
         super()
-        this.house = house;         // reference to the house
-        this.name = name;           // non-observable
-        this.set('status', 'locked')   //
-
-        // door status: locked, not_locked
+        this.house = house;         
+        this.name = name;           
+        this.set('status', 'locked')   // door status: locked, not_locked
 
     }
 
@@ -75,42 +65,30 @@ class DoorLock extends Observable {
 }
 
 class Fridge extends Observable{
-
-    /*
-        Fridge:
-        - possible status -> empty, full, half
-        - actions -> set_empty, set_full, set_half
-
-        (similar application for the washing machine
-            status: on, off
-            actions: turn_on, turn_off, ideally also remotely
-            maybe send notification when finished running)
-    */
-
     constructor(house, name){
         super()
         this.house = house;
         this.name = name;
         this.set('status', 'full') //status: empty, full, half
-        this.electricityConsumption = 500; // fridge consumes an average of 500W
+        this.electricityConsumption = 500; // fridge always consumes an average of 500W
     }
 
 
     setEmpty(){
         this.status = 'empty'
-        this.house.utilities.electricity.consumption += this.electricityConsumption;// always consume electricity
+        this.house.utilities.electricity.consumption += this.electricityConsumption;
         console.log('fridge empty')
     }
 
     setFull(){
         this.status = 'full'
-        this.house.utilities.electricity.consumption += this.electricityConsumption; // always consume electricity
+        this.house.utilities.electricity.consumption += this.electricityConsumption; 
         console.log('fridge full')
     }
 
     setHalf(){
         this.status = 'half'
-        this.house.utilities.electricity.consumption += this.electricityConsumption; // always consume electricity
+        this.house.utilities.electricity.consumption += this.electricityConsumption; 
         console.log('fridge half full')
     }
     
@@ -123,7 +101,7 @@ class Heater extends Observable{
         this.house = house;
         this.name = name;
         this.set('status', 'off') // status: on, off
-        this.electricityConsumption = 15; //10kWh each time heater turned on
+        this.electricityConsumption = 15; //15kWh each time heater turned on
     }
 
     switchOnHeater(){
@@ -143,61 +121,57 @@ class Heater extends Observable{
 class Light extends Observable {
     constructor (house, name) {
         super()
-        this.house = house;         // reference to the house
-        this.name = name;           // non-observable
+        this.house = house;         
+        this.name = name;           
         this.set('status', 'off')   // status: on, off
-        this.electricityConsumption = 10; // 500Wh
+        this.electricityConsumption = 10; // 10Wh every time light turned on
     }
     switchOnLight () {
-        if(this.status == 'on'){
-            console.log(this.name + ' already turned on')
-            return
+        if(this.status != 'on'){
+            this.status = 'on'
+            this.house.utilities.electricity.consumption += this.electricityConsumption;
+            console.log(this.name + ' turned on')
         }
-        this.status = 'on'
-        this.house.utilities.electricity.consumption += this.electricityConsumption;
-        // Include some messages logged on the console!
-        //console.log('Kitchen light turned on')
-        console.log(this.name + ' turned on')
-        
-        
     }
     switchOffLight () {
-        if(this.status == 'off'){
-            console.log(this.name + ' already turned off')
-            return
+        if(this.status != 'off'){
+            this.status = 'off'
+            this.house.utilities.electricity.consumption -=  this.electricityConsumption;
+            console.log(this.name + ' turned off')
         }
-        this.status = 'off'
-        this.house.utilities.electricity.consumption -=  this.electricityConsumption;
-        console.log(this.name + ' turned off')
         
     }
 }
 
 class VacuumCleaner extends Observable{
-    constructor(house, name, in_room){
-        super(house, name)
+    constructor(house,name, in_room){
+        super()
         this.house = house;
         this.name = name;
         this.in_room = in_room;
-        // this.status = "off"; // on, off 
-        this.set('status', 'off')
-        // this.battery = "charging"; // charging, discharging
-        this.set('battery','charging')
+        this.set('status','off'); // status: on, off
+        this.set('battery', 'charging') // battery_status: charging, disharging
+        this.electricityConsumption = 90; // 90W/charging cycle
     }
 
-    //methods
+    // turnOn and turnOff methods follows the preconditions of the PDDL methods
+
     turnOn(){
-        // if(this.status == 'off') && this.battery == 'charging'){
+        if(this.status == 'off' && this.battery == 'charging'){ 
             this.status='on';
+            this.battery = 'discharging';
+            this.house.utilities.electricity.consumption -= this.electricityConsumption;
             console.log('turn on vacuum cleaner');
-        // }
+        }
     }
 
     turnOff(){
-        // if(this.status == 'on' )&& this.battery == 'discharging'){
+        if(this.status == 'on' && this.battery == 'discharging'){
             this.status = 'off';
+            this.battery = 'charging';
+            this.house.utilities.electricity.consumption += this.electricityConsumption;
             console.log('turn off vacuum cleaner');
-        // }
+        }
     }
     
     move(to){
@@ -210,14 +184,13 @@ class VacuumCleaner extends Observable{
     }
 }
 
-
 class WashingMachine extends Observable {
     constructor (house, name) {
         super()
         this.house = house;         
         this.name = name;           
         this.set('status', 'off')
-        this.electricityConsumption = 300; // 500 Wh/run
+        this.electricityConsumption = 300; // 300 Wh/run
     }
 
     switchOnWashingMachine () {

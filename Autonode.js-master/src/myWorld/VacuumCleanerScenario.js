@@ -1,14 +1,12 @@
-// // def vacuum cleaner scenarion -> actions and goals
+// def vacuum cleaner scenario -> actions and goals
 
-// // used online planner (directly saves domain and problem pddl files and send solving request to online planner)
+// used online planner (directly saves domain and problem pddl files and send solving request to online planner)
 
 const pddlActionIntention = require('../pddl/actions/pddlActionIntention')
 const Agent = require('../bdi/Agent')
 const Goal = require('../bdi/Goal')
 const Intention = require('../bdi/Intention')
 const PlanningGoal = require('../pddl/PlanningGoal')
-
-// const world = require('./VacuumAgentWorld')
 
 /**
  * vacuum agent -> called the world methods
@@ -19,9 +17,11 @@ const PlanningGoal = require('../pddl/PlanningGoal')
  * define agent intentions -> call to world methods and execute actions in the world, then update world and agent beliefs
  * 
  * implementation of the actions relies on a method provided by the world object
+ * 
+ * extended this idea, taken from blocksworldScenario3, to call the device methods instead of the world methods
 */
 
-// could also have done like that -> need also to add the agent's device in the Agent.js constructor -> Agent(name, device) 
+// need also to add the agent's device in the Agent.js constructor -> Agent(name, device) 
 class VacuumAction extends pddlActionIntention{
 
     async checkPreconditionAndApplyEffect (duration) {
@@ -40,8 +40,6 @@ class Move extends VacuumAction {
     static precondition = [['robot','vacuum'], ['room', 'source'],['room', 'destination'],['at','vacuum','source'],['connected','source','destination'], ['on' ,'vacuum'] ];
     static effect = [['at', 'vacuum','destination'],['not at', 'vacuum','source']];
     *exec ({source, destination}=parameters) {
-        // yield world.Move({vacuum: this.agent.name, source: source, destination: destination})
-
         this.agent.device.move(destination)
         yield this.checkPreconditionAndApplyEffect(40)
     }
@@ -52,8 +50,6 @@ class CleanRoom extends VacuumAction {
     static precondition = [ ['robot','vacuum'], ['room', 'room'],['dirty', 'room'],['at','vacuum', 'room'], ['on' ,'vacuum']];
     static effect = [['clean','room'], ['not dirty', 'room']];
     *exec ({room}=parameters) {
-        // yield world.CleanRoom({vacuum:  this.agent.name, room: room})
-        
         this.agent.device.cleanRoom(room);
         yield this.checkPreconditionAndApplyEffect(90);
     }
@@ -65,8 +61,6 @@ class TurnOn extends VacuumAction {
     static precondition = [ ['robot','vacuum'], ['off', 'vacuum'] , ['charging', 'vacuum']];
     static effect = [['on','vacuum'], ['not off', 'vacuum'], ['discharging', 'vacuum'], ['not charging', 'vacuum']];
     *exec ({}=parameters) {
-        // yield world.TurnOn({vacuum: this.agent.name})
-
         this.agent.device.turnOn()
         yield this.checkPreconditionAndApplyEffect(1)
     }
@@ -77,8 +71,6 @@ class TurnOff extends VacuumAction {
     static precondition = [ ['robot','vacuum'], ['on', 'vacuum'], ['discharging', 'vacuum']];
     static effect = [['off','vacuum'], ['not on', 'vacuum'], ['charging', 'vacuum'], ['not discharging', 'vacuum']];
     *exec ({}=parameters) {
-        // yield world.TurnOff({vacuum: this.agent.name})
-
         this.agent.device.turnOff()
         yield this.checkPreconditionAndApplyEffect(1)
     }

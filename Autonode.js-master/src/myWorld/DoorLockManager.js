@@ -1,7 +1,7 @@
 const Goal = require('../bdi/Goal');
 const Intention = require('../bdi/Intention');
 
-const DoorLock = require('./DoorLock');
+// const DoorLock = require('./DoorLock');
 
 const Clock = require('../utils/Clock');
 
@@ -56,8 +56,6 @@ class DoorLockIntention extends Intention {
                     this.doorLock.unlockDoor()
                    
                 }
-                
-                
             }
         
         });

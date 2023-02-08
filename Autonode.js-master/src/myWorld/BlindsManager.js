@@ -1,6 +1,6 @@
 const Goal = require('../bdi/Goal');
 const Intention = require('../bdi/Intention');
-const Blinds = require('./Blinds');
+// const Blinds = require('./Blinds');
 
 const Clock = require('../utils/Clock');
 
@@ -30,27 +30,6 @@ class BlindsIntention extends Intention {
     static applicable (goal) {
         return goal instanceof BlindsGoal
     }
-
-    /**
-     * To run code in parallel use postSubGoal without wait or yield. For example:
-     * 
-     * for (let l of this.lights) {
-     *      let lightGoalPromise = this.agent.postSubGoal( new SenseOneLightGoal(l) )
-     *      lightsGoals.push(lightGoalPromise)
-     * }
-     * Or put paraller code in Promises callback and do not wait or yield for them neither. For example:
-     * 
-     * for (let l of this.lights) {
-     *      let lightGoalPromise = new Promise( async res => {
-     *          while (true) {
-     *              let status = await l.notifyChange('status')
-     *              this.log('sense: light ' + l.name + ' switched ' + status)
-     *              this.agent.beliefs.declare('light_on '+l.name, status=='on')
-     *              this.agent.beliefs.declare('light_off '+l.name, status=='off')
-     *          }
-     *      });
-     * }
-     */
     *exec () {
         var blindsGoals = []
         //for (let b of this.blinds) {

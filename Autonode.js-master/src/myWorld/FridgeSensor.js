@@ -1,6 +1,6 @@
 const Goal = require('../bdi/Goal');
 const Intention = require('../bdi/Intention');
-const Fridge = require('./Fridge');
+// const Fridge = require('./Fridge');
 
 
 /*
@@ -39,22 +39,9 @@ class SenseFridgeIntention extends Intention {
             let status = yield this.fridge.notifyChange('status')
             this.log('sense:  fridge_'  + status)
 
-            // if(this.fridge.status == 'empty'){ // if fridge empty -> need to buy grocieries and also to start washing machine
-            //     this.agent.beliefs.declare('fridge_empty ', status=='empty')   
-            //     this.fridge.house.devices.washing_machine.switchOnWashingMachine()
-            //     // fridge tell wm to turn on
-            // }
-            // else{
-            //     this.agent.beliefs.declare('fridge_full ', status=='full')
-            //     this.agent.beliefs.declare('fridge_half ', status=='half')
-            //     // this.agent.beliefs.declare('fridge_empty ', status=='empty')
-            // }
-
-
             this.agent.beliefs.declare('fridge_full ', status=='full')
             this.agent.beliefs.declare('fridge_half ', status=='half')
             this.agent.beliefs.declare('fridge_empty ', status=='empty')
-            //this.agent.beliefs.declare('fridge_'+status);
         }
     }
 

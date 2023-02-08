@@ -1,6 +1,6 @@
 const Goal = require('../bdi/Goal');
 const Intention = require('../bdi/Intention');
-const Heater = require('./Heater');
+// const Heater = require('./Heater');
 const Clock = require('../utils/Clock');
 
 
@@ -35,17 +35,8 @@ class HeatersIntention extends Intention {
     
     *exec () {
         var heatersGoals = []
-        //for (let h of this.heaters) {
-            // let lightGoalPromise = this.agent.postSubGoal( new SenseOneLightGoal(l) )
-            // lightsGoals.push(lightGoalPromise)
-            
             let heaterGoalPromise = new Promise( async res => {
                 while (true) {
-                    // let status = await h.notifyChange('status')
-                    // this.log('sense: heater ' + h.name + ' switched ' + status)
-                    // this.agent.beliefs.declare(h.name + ' on', status=='on')
-                    // this.agent.beliefs.declare(h.name + ' off', status=='off')
-
                     /**
                      * turn on heater -> 6, 12, 18
                      * turn off heater -> 7, 14, 22
@@ -101,28 +92,6 @@ class HeatersIntention extends Intention {
                             }
                         }
                     }
-                    
-                    
-                    // if(status == 6 || status == 12 || status == 18){
-                    //     for(let h of this.heaters){
-                    //         if(this.agent.beliefs.check('not on '+h.name)){
-                    //             this.log('turned on '+h.name);
-                    //             h.switchOnHeater();
-                    //         }
-                    //     }           
-                    // }
-                    
-                    // if(status == 7 || status == 14|| status == 22){
-                    //     for(let h of this.heaters){
-                    //         if(this.agent.beliefs.check('on '+h.name)){
-                    //             this.log('turned off '+h.name);
-                    //             h.switchOffHeater();
-                    //         }
-                    //     }  
-                    // }
-                    
-
-                    // let status = await
                 }
             });
 
@@ -132,47 +101,5 @@ class HeatersIntention extends Intention {
     }
 
 }
-
-
-
-// class SenseOneHeaterGoal extends Goal {
-
-//     constructor (heater) {
-//         super()
-
-//         /** @type {Thermostat} thermostat */
-//         this.heater = heater
-
-//     }
-
-// }
-
-
-
-// class SenseOneHeaterIntention extends Intention {
-    
-//     constructor (agent, goal) {
-//         super(agent, goal)
-
-//         /** @type {Thermostat} thermostat */
-//         this.heater = this.goal.heater
-//     }
-
-//     static applicable (goal) {
-//         return goal instanceof SenseOneThermostatGoal
-//     }
-
-//     *exec () {
-//         while (true) {
-//             let status = yield this.heater.notifyChange('status')
-//             this.log('sense: heater ' + this.heater.name + ' switched ' + status)
-//             this.agent.beliefs.declare('heater_on '+this.heater.name, status=='on')
-//             this.agent.beliefs.declare('heater_off '+this.heater.name, status=='off')
-//         }
-//     }
-
-// }
-
-
 
 module.exports = {HeatersGoal, HeatersIntention} //, SenseOneHeaterGoal, SenseOneHeaterIntention}

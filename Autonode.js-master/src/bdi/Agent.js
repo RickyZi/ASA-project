@@ -13,10 +13,10 @@ class Agent {
     constructor (name, device) {
         this.name = name
         this.id = nextId++
-
-        // added to let agent access to the vacuum device methods
-        this.device = device;
         
+        // added to let vacuum_agent call the device methods (move, cleanRoom, turnOn, turnOff)
+        this.device = device
+
         /** @type {Beliefset} beliefs */
         this.beliefs = new Beliefset()
 

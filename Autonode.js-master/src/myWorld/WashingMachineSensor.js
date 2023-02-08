@@ -1,11 +1,7 @@
 const Goal = require('../bdi/Goal');
 const Intention = require('../bdi/Intention');
-const WashingMachine = require('./WashingMachine');
+// const WashingMachine = require('./WashingMachine');
 
-
-/*
-    sensing status washing machine and activate consequently 
-*/
 
 class SenseWMGoal extends Goal {
 

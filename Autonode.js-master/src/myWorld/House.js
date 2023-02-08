@@ -2,17 +2,8 @@ const Observable =  require('../utils/Observable')
 
 
 const Person = require('./Person')
+
 // devices
-// const Light = require('./Light')
-// const Heater = require('./Heater')
-// const Fridge = require('./Fridge')
-// const DoorLock = require('./DoorLock')
-// const WashingMachine = require('./WashingMachine')
-// const DishWasher = require('./DishWasher')
-// const Blinds = require('./Blinds')
-
-// const VacuumCleaner = require('./VacuumCleaner')
-
 const {Blinds, DishWasher, DoorLock, Fridge, Heater, Light, VacuumCleaner, WashingMachine} = require('./HouseDevices')
 
 class House {
@@ -32,7 +23,7 @@ class House {
         this.devices = {
             /*
                 Rooms, devices:
-                - entrance: doorLock, light, vacuumCleaner
+                - entrance: doorLock, light, vacuumCleaner (defined as a planning agent)
                 - living room: light, thermostat, heater,
                 - kitchen: light, heater
                 - bathroom: light, heater
@@ -74,7 +65,7 @@ class House {
             kitchen_blinds: new Blinds(this, 'kitchen_blinds'),
             living_room_blinds: new Blinds(this, 'living_room_blinds'),
 
-            // vacuum cleaner
+            //vacuum cleaner
             vacuum_cleaner: new VacuumCleaner(this, 'vacuum_cleaner', 'entrance')
             
         }
@@ -82,7 +73,7 @@ class House {
             electricity: new Observable( { consumption: this.devices.kitchen_light.electricityConsumption } )
             // selected kitchen light because is one of the most used during the day
             
-            // electricity consumption -> lights, heaters, fridge
+            // electricity consumption -> lights, heaters, fridge, vacuum cleaner
             // cleaning time -> robot vacuum cleaner
 
             // always buy electricity -> cost during day: 0.373$/KWh, cost during night: 0.354KWh
