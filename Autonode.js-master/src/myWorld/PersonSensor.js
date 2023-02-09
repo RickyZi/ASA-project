@@ -61,10 +61,10 @@ class SensePeopleIntention extends Intention {
 
                     // prev room should be already empty
 
-                    this.agent.beliefs.declare('person_in_room ' +p.name + ' ' + new_room); // person_in_room bob bathroom
+                    this.agent.beliefs.declare('in_room ' +p.name + ' ' + new_room); // person_in_room bob bathroom
                     this.agent.beliefs.undeclare('empty '+ new_room);
                     if(prev_room != new_room){
-                        this.agent.beliefs.undeclare('person_in_room ' +p.name + ' ' + prev_room); // person_in_room bob bathroom
+                        this.agent.beliefs.undeclare('in_room ' +p.name + ' ' + prev_room); // person_in_room bob bathroom
                         this.agent.beliefs.declare('empty '+ prev_room);
                     }
                     

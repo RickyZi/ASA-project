@@ -41,9 +41,10 @@ class DoorLockIntention extends Intention {
 
     *exec () {
         var doorLockGoals = [];
-        let DoorLockGoalPromise = new Promise( async res => {
+            let DoorLockGoalPromise = new Promise( async res => {
             while (true) {
                 let status = await Clock.global.notifyChange('hh', 'locked')
+                
                 if(status == 23 && this.agent.beliefs.check('not locked entrance_door')){
                     // if at 23 door not locked -> close the door
                     this.log("Entrance door locked! Good Night!")

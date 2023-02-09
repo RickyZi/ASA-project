@@ -4,7 +4,7 @@ const Observable =  require('../utils/Observable')
 const Person = require('./Person')
 
 // devices
-const {Blinds, DishWasher, DoorLock, Fridge, Heater, Light, VacuumCleaner, WashingMachine} = require('./HouseDevices')
+const {Blinds, DishWasher, DoorLock, Fridge, Heater, Light, VacuumCleaner, WashingMachine, HouseAlarmSystem} = require('./HouseDevices')
 
 class House {
     constructor () {
@@ -49,8 +49,8 @@ class House {
             // firdge (kitchen)
             fridge: new Fridge(this, 'fridge'),
 
-            // main entrance door
-            entrance_door: new DoorLock(this, 'entrance_door'),
+            // front door
+            front_door: new DoorLock(this, 'front_door'),
             //garage_door: new Doors(this, 'garage_door'),
 
             //washing machine (bathroom)

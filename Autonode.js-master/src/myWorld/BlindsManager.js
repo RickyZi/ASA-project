@@ -41,7 +41,7 @@ class BlindsIntention extends Intention {
                 let status = await Clock.global.notifyChange('hh', 'closed'); 
                 
                 // close blinds at night
-                if(status == 23  && this.agent.beliefs.check('not closed '+this.blinds.name)){
+                if(status == 22  && this.agent.beliefs.check('not closed '+this.blinds.name)){
                     
                     for(let b of this.blinds){
                         this.log('Good Night! ' + b.name + ' closed');
@@ -51,7 +51,7 @@ class BlindsIntention extends Intention {
                 }
 
                 // open blinds in the morning when the alarm rings
-                else if(status == 6 && this.agent.beliefs.check('not open ' +this.blinds.name)){
+                else if(status == 6 &&this.agent.beliefs.check('not open ' +this.blinds.name)){
                     for(let b of this.blinds){
                         this.log('Good morning! '+b.name + ' opened');
                         b.openBlinds();

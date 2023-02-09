@@ -25,6 +25,11 @@ const {SenseDWIntention, SenseDWGoal} = require('./DishWasherSensor')
 const {SenseBlindsGoal, SenseBlindsIntention, SenseOneBlindGoal, SenseOneBlindIntention} = require('./BlindsSensor')
 const {BlindsGoal, BlindsIntention} = require('./BlindsManager')
 
+// test house alarm
+
+// const{SenseHouseAlarmSystemIntention, SenseHouseAlarmSystemGoal} = require('./HouseAlarmSensor')
+
+
 // ----------------------------------------------------------------------
 
 // pddl actions
@@ -51,10 +56,9 @@ var myHouse = new House()
     - close all windows at night
 */
 
-var house_agent = new Agent('house_agent')
-var security_agent = new Agent('security_agent');
 
-// --------------- House Agent ---------------
+
+var house_agent = new Agent('house_agent');
 
 house_agent.intentions.push(AlarmIntention)
 house_agent.postSubGoal( new AlarmGoal({hh:6, mm:0}) )
@@ -115,6 +119,8 @@ house_agent.postSubGoal(new SenseBlindsGoal([
     - close all blinds at night (23)
  */
 
+var security_agent = new Agent('security_agent');
+
 security_agent.intentions.push(SenseDoorLockIntention)
 security_agent.postSubGoal(new SenseDoorLockGoal(myHouse.devices.entrance_door))
 
@@ -126,7 +132,9 @@ security_agent.postSubGoal(new BlindsGoal([
     myHouse.devices.bedroom_blinds, 
     myHouse.devices.bathroom_blinds, 
     myHouse.devices.kitchen_blinds, 
-    myHouse.devices.living_room_blinds]))
+    myHouse.devices.living_room_blinds
+]))
+
 
 // ----------------------------------------------------------------------
 
@@ -248,8 +256,8 @@ function declare_dirty_rooms(){
 Clock.global.observe('mm', (mm) => {
     var time = Clock.global
 
-    // if(time.hh==6 && time.mm==0) // ALARM start of the day
-       
+    // resident starts the day in the bedroom at 6 AM
+    
     if(time.hh==6 && time.mm==5){
         myHouse.people.bob.moveTo('hallway')
     }
@@ -274,11 +282,12 @@ Clock.global.observe('mm', (mm) => {
     }
     if(time.hh == 6 && time.mm==50){
         myHouse.people.bob.moveTo('entrance')
+        // myHouse.devices.entrance_door.unlockDoor()
     }
         
     if(time.hh==7 && time.mm==0){
         myHouse.people.bob.moveTo('outdoor')
-        myHouse.devices.entrance_door.lockDoor() // Bob locks the entrance door
+        // myHouse.devices.entrance_door.lockDoor() // Bob locks the entrance door
     }
 
     // ----------------------------------------------------------------------
@@ -286,7 +295,7 @@ Clock.global.observe('mm', (mm) => {
     // Bob comes back home for lunch
     
     if(time.hh==13 && time.mm==00){
-        myHouse.devices.entrance_door.unlockDoor() // Bob unlocks the entrance door
+        // myHouse.devices.entrance_door.unlockDoor() // Bob unlocks the entrance door
         myHouse.people.bob.moveTo('entrance') 
     }
     if(time.hh == 13 && time.mm == 5){
@@ -305,7 +314,7 @@ Clock.global.observe('mm', (mm) => {
 
     if(time.hh==14 && time.mm==30){
         myHouse.people.bob.moveTo('outdoor') // bob leaves again for work
-        myHouse.devices.entrance_door.lockDoor()
+        // myHouse.devices.entrance_door.lockDoor()
     }
     
     // ----------------------------------------------------------------------
@@ -334,7 +343,7 @@ Clock.global.observe('mm', (mm) => {
     // dinner scenario
 
     if(time.hh==19 && time.mm==0){
-        myHouse.devices.entrance_door.unlockDoor() //bob unlocks door
+        // myHouse.devices.entrance_door.unlockDoor() //bob unlocks door
         myHouse.people.bob.moveTo('entrance')
     }
         
@@ -371,7 +380,7 @@ Clock.global.observe('mm', (mm) => {
         myHouse.people.bob.moveTo('living_room')
     }
         
-
+    // security agent close all blinds
     if(time.hh==22 && time.mm==0){
         myHouse.people.bob.moveTo('hallway')
     }
@@ -396,7 +405,7 @@ Clock.global.observe('mm', (mm) => {
     
     // security agent make sure entrance door is closed
     if(time.hh == 23 && time.mm == 0){
-        myHouse.devices.bedroom_light.switchOffLight()
+        myHouse.devices.bedroom_light.switchOffLight() // resident goes to sleep
     }
 
     

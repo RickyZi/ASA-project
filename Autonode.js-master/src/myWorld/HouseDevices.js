@@ -102,20 +102,35 @@ class Heater extends Observable{
         this.name = name;
         this.set('status', 'off') // status: on, off
         this.electricityConsumption = 15; //15kWh each time heater turned on
+        this.set('temperature', 18)
+
+        // turn_on/turn_off morning, afternoon, evening?
+
     }
 
     switchOnHeater(){
-        this.status = 'on'
-        this.house.utilities.electricity.consumption += this.electricityConsumption;
-        console.log(this.name + '  on')
-
+        if(this.status == 'off'){
+            this.status = 'on'
+            this.house.utilities.electricity.consumption += this.electricityConsumption;
+            console.log(this.name + '  on', 'temperature',this.temperature)
+        }
+        
     }
 
     switchOffHeater(){
-        this.status = 'off'
-        this.house.utilities.electricity.consumption -= this.electricityConsumption;
-        console.log(this.name + ' off')
+        if(this.status == 'on'){
+            this.status = 'off'
+            this.house.utilities.electricity.consumption -= this.electricityConsumption;
+            console.log(this.name + ' off')
+        }
+
+        
     }   
+
+    setNewTemperature(new_temperature){
+        console.log(this.name,'temeperature changed from',this.temperature,'to', new_temperature)
+        this.temperature = new_temperature;
+    }
 }
 
 class Light extends Observable {
@@ -127,14 +142,14 @@ class Light extends Observable {
         this.electricityConsumption = 10; // 10Wh every time light turned on
     }
     switchOnLight () {
-        if(this.status != 'on'){
+        if(this.status == 'off'){
             this.status = 'on'
             this.house.utilities.electricity.consumption += this.electricityConsumption;
             console.log(this.name + ' turned on')
         }
     }
     switchOffLight () {
-        if(this.status != 'off'){
+        if(this.status == 'on'){
             this.status = 'off'
             this.house.utilities.electricity.consumption -=  this.electricityConsumption;
             console.log(this.name + ' turned off')
@@ -151,7 +166,7 @@ class VacuumCleaner extends Observable{
         this.in_room = in_room;
         this.set('status','off'); // status: on, off
         this.set('battery', 'charging') // battery_status: charging, disharging
-        this.electricityConsumption = 90; // 90W/charging cycle
+        this.electricityConsumption = 90; // 90W per scharging cycle
     }
 
     // turnOn and turnOff methods follows the preconditions of the PDDL methods
@@ -174,9 +189,9 @@ class VacuumCleaner extends Observable{
         }
     }
     
-    move(to){
-        console.log('vacuum moved from '+ this.in_room +' to '+ to);
-        this.in_room=to;
+    move(to_room){
+        console.log('vacuum moved from '+ this.in_room +' to '+ to_room);
+        this.in_room=to_room;
     }
 
     cleanRoom(room){
@@ -194,17 +209,20 @@ class WashingMachine extends Observable {
     }
 
     switchOnWashingMachine () {
-        this.status = 'on'
-        this.house.utilities.electricity.consumption += this.electricityConsumption;
-        console.log('washing machine turned on')
-
-        
+        if(this.status == 'off'){
+            this.status = 'on'
+            this.house.utilities.electricity.consumption += this.electricityConsumption;
+            console.log('washing machine turned on')    
+        }
         
     }
+
     switchOffWashingMachine () {
-        this.status = 'off'
-        this.house.utilities.electricity.consumption -= this.electricityConsumption;
-        console.log('washing machine turned off')
+        if(this.status == 'on'){
+            this.status = 'off'
+            this.house.utilities.electricity.consumption -= this.electricityConsumption;
+            console.log('washing machine turned off')
+        }
     }
 }
 
