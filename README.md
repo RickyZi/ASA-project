@@ -1,5 +1,5 @@
 # Autonomous Software Agents - final project
-University of Trento - Trento, 2022
+University of Trento - A.Y. 2021-2022
 
 Student: Ziglio Riccardo
 
@@ -10,6 +10,7 @@ Student: Ziglio Riccardo
 
 ## Project Description
 This repository contains the final implementation of the project of the ASA course.
+
 
 
 ## Repo Structure
