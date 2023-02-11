@@ -1,5 +1,5 @@
 # Autonomous Software Agents - final project
-University of Trento - Trento, 2022
+University of Trento - A.Y. 2021-2022
 
 Student: Ziglio Riccardo
 
@@ -10,6 +10,7 @@ It models a smart home scenario, designed for a single resident (called Bob). Th
 The home is controlled by a house agent, which has the role of interfacing with the resident via a smartphone app and schedule the device activities following the user request, while still being responsive to the user behaviour (i.e. turn on/off a room light when resident walks in/out of the room). Other two agents operate in this scenario, the secuirty agent and the vacuum agent. The former has the role to ensure the front door and all the blinds in the hosue are closed at night (at 23), to preserve the resident privacy and security. It will also, unlock the front door and open the blinds when the resident leaves for work.
 The vacuum agent is a planning agent that has the role of keeping the house clean. In the proposed scenario runs every day at 15, when the user is not at home, and takes almost 3 hour the clean the whole house. 
 For more details about the scenario and how it has been implemented please refer to the project report.
+
 
 
 ## Repo Structure
