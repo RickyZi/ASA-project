@@ -9,6 +9,7 @@ const Intention = require('../bdi/Intention')
 const PlanningGoal = require('../pddl/PlanningGoal')
 
 /**
+ * [Notes from PDDL lab]
  * vacuum agent -> called the world methods
  * agent when it wants to perform an action it perform the method of a world, a method of a device, something external to the agent
  * sequence of actions computed by agent using online planner, combining the actions, finding the correct sequence of actions, with 

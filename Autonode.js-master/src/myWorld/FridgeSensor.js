@@ -3,12 +3,6 @@ const Intention = require('../bdi/Intention');
 // const Fridge = require('./Fridge');
 
 
-/*
-    sensing status fridge and activate consequently 
-*/
-
-// there is only one fridge in the house and its is located in the kitchen (no need to name it)
-
 class SenseFridgeGoal extends Goal {
 
     constructor (fridge) {
@@ -37,7 +31,7 @@ class SenseFridgeIntention extends Intention {
     *exec () {
         while (true) {
             let status = yield this.fridge.notifyChange('status')
-            this.log('sense:  fridge_'  + status)
+            this.log('sense:  fridge '  + status)
 
             this.agent.beliefs.declare('fridge_full ', status=='full')
             this.agent.beliefs.declare('fridge_half ', status=='half')

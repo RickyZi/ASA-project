@@ -102,10 +102,7 @@ class Heater extends Observable{
         this.name = name;
         this.set('status', 'off') // status: on, off
         this.electricityConsumption = 15; //15kWh each time heater turned on
-        this.set('temperature', 18)
-
-        // turn_on/turn_off morning, afternoon, evening?
-
+        this.set('temperature', 18) 
     }
 
     switchOnHeater(){
@@ -164,7 +161,7 @@ class VacuumCleaner extends Observable{
         this.house = house;
         this.name = name;
         this.in_room = in_room;
-        this.set('status','off'); // status: on, off
+        this.set('status', 'off'); // status: on, off
         this.set('battery', 'charging') // battery_status: charging, disharging
         this.electricityConsumption = 90; // 90W per scharging cycle
     }

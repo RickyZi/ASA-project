@@ -15,7 +15,7 @@ class House {
             living_room: { name: 'living_room', doors_to: ['kitchen', 'hallway', 'entrance'], num_ppl : 0 },
             entrance: {name: 'entrance', doors_to: ['living_room', 'outdoor'], num_ppl: 0},
             bathroom: {name: 'bathroom', doors_to: ['hallway'], num_ppl: 0},
-            bedroom: {name: 'bedroom', doors_to: ['hallway'], num_ppl : 1},
+            bedroom: {name: 'bedroom', doors_to: ['hallway'], num_ppl : 1}, // resident always starts and end day in the bedrooms
             hallway: {name: 'hallway', doors_to: ['bathroom', 'bedroom', 'living_room'], num_ppl: 0}, 
             outdoor: {name: 'outdoor', doors_to: ['entrance'], num_ppl: 0} // used to simulate resident going out of the house (i.e. to work)
 

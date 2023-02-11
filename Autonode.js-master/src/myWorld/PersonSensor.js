@@ -2,9 +2,8 @@ const Goal = require('../bdi/Goal');
 const Intention = require('../bdi/Intention');
 // const Person = require('./Person');
 
-// to sense person intention and turn on/off lights when it enters a room
-
-// NOTE: person (singular) and people (plural)
+// sense person intention of moving from one room to another
+// and turn on/off lights when he enters a room
 
 
 class SensePeopleGoal extends Goal {
@@ -18,7 +17,6 @@ class SensePeopleGoal extends Goal {
 
 }
 
-// how to check if person in room and activate light in that room?
 
 class SensePeopleIntention extends Intention {
     
@@ -36,8 +34,6 @@ class SensePeopleIntention extends Intention {
     *exec () {
         var PeopleGoals = []
         for (let p of this.People) {
-            // let lightGoalPromise = this.agent.postSubGoal( new SenseOneLightGoal(l) )
-            // lightsGoals.push(lightGoalPromise)
             
             let PeopleGoalPromise = new Promise( async res => {
                 while (true) {
@@ -54,8 +50,8 @@ class SensePeopleIntention extends Intention {
                         p.house.devices[new_room+'_light'].switchOnLight();
                     }
 
+                    // outdoor is not a real room, is used only to model the resident leaving the house
                     if(prev_room != 'outdoor' && p.house.rooms[prev_room].num_ppl == 0){
-                        //console.log('person in room '+ prev_room + ': 0');
                         p.house.devices[prev_room+'_light'].switchOffLight();
                     }
 

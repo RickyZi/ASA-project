@@ -39,9 +39,8 @@ class SenseDWIntention extends Intention {
         while (true) {
             let status = yield this.dw.notifyChange('status')
             this.log('sense:  dish washer '  + status)
-            this.agent.beliefs.declare('DW on ', status=='running')
+            this.agent.beliefs.declare('DW on ', status=='on')
             this.agent.beliefs.declare('DW off ', status=='off')
-            this.agent.beliefs.declare('DW pause ', status=='pause')
         }
     }
 

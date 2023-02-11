@@ -16,8 +16,6 @@ class SenseBlindsGoal extends Goal {
 
 }
 
-// how to check if person in room and activate light in that room?
-
 class SenseBlindsIntention extends Intention {
     
     constructor (agent, goal) {

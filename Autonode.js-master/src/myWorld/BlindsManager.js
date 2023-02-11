@@ -16,7 +16,6 @@ class BlindsGoal extends Goal {
 
 }
 
-// how to check if person in room and activate light in that room?
 
 class BlindsIntention extends Intention {
     
@@ -32,9 +31,6 @@ class BlindsIntention extends Intention {
     }
     *exec () {
         var blindsGoals = []
-        //for (let b of this.blinds) {
-            // let lightGoalPromise = this.agent.postSubGoal( new SenseOneLightGoal(l) )
-            // lightsGoals.push(lightGoalPromise)
             
             let blindsGoalPromise = new Promise( async res => {
             while (true) {
@@ -62,7 +58,7 @@ class BlindsIntention extends Intention {
         });
 
         blindsGoals.push(blindsGoalPromise)
-       // }
+       
         yield Promise.all(blindsGoals)
     }
 

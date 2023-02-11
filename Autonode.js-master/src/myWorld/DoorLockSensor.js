@@ -6,14 +6,6 @@ const Intention = require('../bdi/Intention');
 const Clock = require('../utils/Clock');
 
 
-/*
-    sensing status doors
-    - status: open, closed
-    - actions: open_door, close_door
-*/
-
-// every day at midnight close the entrance
-
 class SenseDoorLockGoal extends Goal {
 
     constructor (doorLock) {

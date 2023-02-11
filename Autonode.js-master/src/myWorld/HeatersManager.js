@@ -40,8 +40,8 @@ class HeatersIntention extends Intention {
                     /**
                      * turn on heater -> 6, 12, 18
                      * turn off heater -> 7, 14, 22
+                     * fixed schedule that follows the user behaviour during the week
                      */
-                    //let h = this.heaters
 
                     let status = await Clock.global.notifyChange('hh', 'on');
                     for(let h of this.heaters){
@@ -96,7 +96,6 @@ class HeatersIntention extends Intention {
             });
 
             heatersGoals.push(heaterGoalPromise)
-        //}
         yield Promise.all(heatersGoals)
     }
 
