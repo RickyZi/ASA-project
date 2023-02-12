@@ -1,3 +1,9 @@
+;; First definition of the vacuum agent problem that was then used to define the agent's actions in myScenario.js file
+;;
+;; used init_vacuum_belief() function to init the objects in the same way, and used the declare_dirty_rooms() function 
+;; to define all rooms as dirty in myScenario.js
+;; done to staisfy actions precondition
+
 (define (problem vacuumpb) (:domain vacuum)
 (:objects 
     vacuum ;; robot

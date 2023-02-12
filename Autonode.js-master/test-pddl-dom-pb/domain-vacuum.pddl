@@ -1,4 +1,5 @@
-;Header and description
+;; First definition of the vacuum agent domain that was then used to define the agent's actions in the vacuumCleanerScenario.js file
+;; tested using the same online planner as the one used by the OnlinePlanner.js file
 
 (define (domain vacuum)
 

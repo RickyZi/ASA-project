@@ -257,12 +257,14 @@ Clock.global.observe('mm', (mm) => {
     // fixed daily schedule
     // ---------------------------------------
 
+    if(time.hh == 6 && time.mm==0){ // ALARM! start of the day
+        myHouse.devices.fridge.setFull() //simulate fridge full (i.e. user has bought groceries)
+    }
+
     if(time.hh==6 && time.mm==5){
         myHouse.people.bob.moveTo('hallway')
-        // myHouse.devices.bedroom_window.openWindow()
     }
     if(time.hh==6 && time.mm==10){
-        // myHouse.devices.bedroom_window.closeWindow()
         myHouse.people.bob.moveTo('bathroom')
     }
     if(time.hh==6 && time.mm==15){
@@ -276,7 +278,7 @@ Clock.global.observe('mm', (mm) => {
     // brekfast scenario
     if(time.hh==6 && time.mm==25){
         myHouse.people.bob.moveTo('kitchen')
-        myHouse.devices.fridge.setHalf()
+        myHouse.devices.fridge.setHalf() // user has consumed some of the supplies so now fridge status is half
     }
 
     if(time.hh == 6 && time.mm == 45){
@@ -305,7 +307,7 @@ Clock.global.observe('mm', (mm) => {
     }
     if(time.hh == 13 && time.mm == 10){
         myHouse.people.bob.moveTo('kitchen')
-        myHouse.devices.fridge.setEmpty()
+        myHouse.devices.fridge.setEmpty() // users has consumed all the supplies so now he needs to buy some more groceries
     }
 
     if(time.hh == 14 && time.mm == 20){

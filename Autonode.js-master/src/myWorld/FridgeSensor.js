@@ -33,9 +33,26 @@ class SenseFridgeIntention extends Intention {
             let status = yield this.fridge.notifyChange('status')
             this.log('sense:  fridge '  + status)
 
-            this.agent.beliefs.declare('fridge_full ', status=='full')
-            this.agent.beliefs.declare('fridge_half ', status=='half')
-            this.agent.beliefs.declare('fridge_empty ', status=='empty')
+            // house agent sends message to user (simulated using terminal) deppending on the status of the fridge
+            if(status == 'empty'){
+                console.log('firdge EMPTY! Need to buy groceries!') 
+                this.agent.beliefs.declare('fridge_empty ', status=='empty')
+            } 
+
+            else if(status == 'half'){
+                console.log('fridge HALF empty. Should buy groceries.')
+                this.agent.beliefs.declare('fridge_half ', status=='half')
+            } 
+            else{
+                console.log('fridge FULL. No need to buy groceries.')
+                this.agent.beliefs.declare('fridge_full ', status=='full')
+            }
+
+           
+            
+            
+
+            
         }
     }
 

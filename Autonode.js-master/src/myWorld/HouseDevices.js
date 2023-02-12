@@ -77,19 +77,19 @@ class Fridge extends Observable{
     setEmpty(){
         this.status = 'empty'
         this.house.utilities.electricity.consumption += this.electricityConsumption;
-        console.log('fridge empty')
+        // console.log('fridge empty')
     }
 
     setFull(){
         this.status = 'full'
         this.house.utilities.electricity.consumption += this.electricityConsumption; 
-        console.log('fridge full')
+        // console.log('fridge full')
     }
 
     setHalf(){
         this.status = 'half'
         this.house.utilities.electricity.consumption += this.electricityConsumption; 
-        console.log('fridge half full')
+        // console.log('fridge half full')
     }
     
 }
@@ -102,7 +102,7 @@ class Heater extends Observable{
         this.name = name;
         this.set('status', 'off') // status: on, off
         this.electricityConsumption = 15; //15kWh each time heater turned on
-        this.set('temperature', 18) 
+        this.set('temperature', 18) // heater keep preset temperature when turned on
     }
 
     switchOnHeater(){
