@@ -26,6 +26,6 @@ The pddl domain and problem files for the _vacuum agent_ can be found in the _/s
 
 
 ## How to run the scenario
-Before running the scenario make sure to execute the command **npm init** in order to install all the dependencies of the project (contained in the package.json file).
+Before running the scenario make sure to execute the command **npm install** in order to install all the dependencies of the project (contained in the package.json file).
 
 To run the scenario, use the terminal to navigate to the _/Autonode.js-master/src/myWorld_ folder. Then, use the command **node myScenario.js** to run it. The execution will be shown on the terminal.
