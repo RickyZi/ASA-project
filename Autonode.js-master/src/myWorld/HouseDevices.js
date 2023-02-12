@@ -26,7 +26,7 @@ class DishWasher extends Observable {
         this.name = name;           
         this.set('status', 'off')   // status: on, off
 
-        this.electricityConsumption = 1200; // dishwasher consumes 1200Wh per cleaning cycle
+        this.electricityConsumption = 1200; // dishwasher consumes 1200Wh per cleaning cycle, a cleaning cycle takes 1h 
     }
 
     turnOn(){
@@ -202,7 +202,7 @@ class WashingMachine extends Observable {
         this.house = house;         
         this.name = name;           
         this.set('status', 'off')
-        this.electricityConsumption = 300; // 300 Wh/run
+        this.electricityConsumption = 300; // 300 Wh per washing cycle, a washing cycle takes 1 hour
     }
 
     switchOnWashingMachine () {

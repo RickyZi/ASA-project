@@ -281,17 +281,16 @@ Clock.global.observe('mm', (mm) => {
         myHouse.devices.fridge.setHalf() // user has consumed some of the supplies so now fridge status is half
     }
 
-    if(time.hh == 6 && time.mm == 45){
+    if(time.hh == 6 && time.mm == 50){
         myHouse.people.bob.moveTo('living_room')
     }
-    if(time.hh == 6 && time.mm==50){
+    if(time.hh == 6 && time.mm==55){
         myHouse.people.bob.moveTo('entrance')
     }
-
     if(time.hh==7 && time.mm==0){
         myHouse.people.bob.moveTo('outdoor')
+        // myHouse.devices.front_door.lockDoor()
     }
-
 
     // ---------------------------------------
     // Bob comes back home for lunch
@@ -394,7 +393,6 @@ Clock.global.observe('mm', (mm) => {
     if(time.hh==22 && time.mm==25){
         myHouse.people.bob.moveTo('hallway')
         myHouse.devices.dish_washer.turnOff()
-
     }
 
     // turn off heaters

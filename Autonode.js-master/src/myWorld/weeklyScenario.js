@@ -265,6 +265,10 @@ Clock.global.observe('mm', (mm) => {
 
     // resident alway starts the day in the bedroom at 6 AM
     
+    if(time.hh == 6 && time.mm==0){ // ALARM! start of the day
+        myHouse.devices.fridge.setFull() //simulate fridge full (i.e. user has bought groceries)
+    }
+
     if(time.hh==6 && time.mm==5){
         myHouse.people.bob.moveTo('hallway')
     }
@@ -274,27 +278,26 @@ Clock.global.observe('mm', (mm) => {
     if(time.hh==6 && time.mm==15){
         myHouse.people.bob.moveTo('hallway')
     }
-        
+
     if(time.hh==6 && time.mm==20){
         myHouse.people.bob.moveTo('living_room')
     }
-    
-    // brekfast scenario 
+
+    // brekfast scenario
     if(time.hh==6 && time.mm==25){
         myHouse.people.bob.moveTo('kitchen')
+        myHouse.devices.fridge.setHalf() // user has consumed some of the supplies so now fridge status is half
     }
-    
-    if(time.hh == 6 && time.mm == 45){
+
+    if(time.hh == 6 && time.mm == 50){
         myHouse.people.bob.moveTo('living_room')
     }
-    if(time.hh == 6 && time.mm==50){
+    if(time.hh == 6 && time.mm==55){
         myHouse.people.bob.moveTo('entrance')
-        // myHouse.devices.entrance_door.unlockDoor()
     }
-        
     if(time.hh==7 && time.mm==0){
         myHouse.people.bob.moveTo('outdoor')
-        // myHouse.devices.entrance_door.lockDoor() // Bob locks the entrance door
+        // myHouse.devices.front_door.lockDoor()
     }
 
     // ----------------------------------------------------------------------
